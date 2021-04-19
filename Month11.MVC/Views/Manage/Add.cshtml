@@ -1,0 +1,220 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+    <script src="~/layui/layui.js"></script>
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-form-item">
+            <label class="layui-form-label">实体业务</label>
+            <div class="layui-input-block">
+                <input type="text" name="YeWu" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">采购订单号</label>
+            <div class="layui-input-block">
+                <input type="text" name="CaiGoHao" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+
+        <label class="layui-form-label">单据类型</label>
+        <select name="Typeid" style="width:100px;height:38px" id="seldanju">
+        </select>
+        <div class="layui-form-item">
+            <label class="layui-form-label">制单部门</label>
+            <div class="layui-input-block">
+                <input type="text" name="BuMen" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">成本类型</label>
+            <div class="layui-input-block">
+                <input type="text" name="CengBenType" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">合同编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="HeTongHao" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">入库单号</label>
+            <div class="layui-input-block">
+                <input type="text" name="RuKuHao" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">税率</label>
+            <div class="layui-input-block">
+                <input type="text" name="ShuiLv" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">制单人</label>
+            <div class="layui-input-block">
+                <input type="text" name="ZhiDanUser" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">合同名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="HeTongName" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <label class="layui-form-label">仓库名称</label>
+        <select name="CangKuId" style="width:100px;height:38px" id="selcang">
+        </select>
+        <div class="layui-form-item">
+            <label class="layui-form-label">入库时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="RuKuDate" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">产品经理</label>
+            <div class="layui-input-block">
+                <input type="text" name="ChanPinUser" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">备注</label>
+            <div class="layui-input-block">
+                <input type="text" name="BeiZhu" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="demo2">保存</button>
+            </div>
+        </div>
+    </form>
+    <script>
+        //绑定下拉
+        $.ajax({
+            url: '/Manage/CangKuBind',
+            type: 'get',
+            async: false,
+            success: function (db) {
+                $("#selcang").append('<option value="-1">全部</option>');
+                $(db).each(function () {
+                    $("#selcang").append('<option value="' + this.cid + '">' + this.cname + '</option>');
+                })
+            }
+        })
+        //绑定下拉
+        $.ajax({
+            url: '/Manage/DanJuBind',
+            type: 'get',
+            async: false,
+            success: function (db) {
+                $("#seldanju").append('<option value="-1">全部</option>');
+                $(db).each(function () {
+                    $("#seldanju").append('<option value="' + this.did + '">' + this.dname + '</option>');
+                })
+            }
+        })
+        layui.use(['form', 'layedit', 'laydate','table'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate
+                , table = layui.table;
+
+            table.render({
+                elem: '#test'
+                , url: '/Manage/MingXiData'
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'mid', title: '序号', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'mingName', title: '产品名称', width: 120, edit: 'text' }
+                    , {
+                        field: 'mingBian', title: '产品编号', width: 150, edit: 'text'
+                    }
+                    , { field: 'mingXian', title: '包装材料', width: 80, edit: 'text', sort: true }
+                    , { field: 'mingCailIa', title: '', width: 100 }
+                    , { field: 'num', title: '数量' }
+                    , { field: 'hanPrice', title: '含税单价', width: 80, sort: true }
+                    , { field: 'buPrice', title: '不含税单价', width: 120 }
+                    , { field: 'hanCount', title: '含税总价', width: 100, sort: true }
+                    , { field: 'buCount', title: '不含税总价', width: 120 }
+                    , { field: 'jianBiLi', title: '加成比例', width: 120 }
+                    , { field: 'jiaPrice', title: '含税加成金额', width: 120 }
+                    , { field: 'buJiaPrice', title: '不含税加成金额', width: 120 }
+                ]]
+                , id: 'testReload'
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                console.log(data.field);
+                if (data.field.YeWu == "") {
+                    alert("不能为空");
+                    return;
+                }
+                if (data.field.BuMen == "") {
+                    alert("不能为空");
+                    return;
+                }
+                if (data.field.CaiGoHao == "") {
+                    alert("不能为空");
+                    return;
+                }
+                if (data.field.CengBenType == "") {
+                    alert("不能为空");
+                    return;
+                }
+                if (data.field.HeTongHao == "") {
+                    alert("不能为空");
+                    return;
+                }
+                var datafd = data.field;
+                $.ajax({
+                    url: '/Manage/RuKuAddData',
+                    type: 'post',
+                    data: data.field,
+                    success: function (db) {
+                        alert(db.msg);
+                        //刷新
+                        window.parent.location.reload();
+                        //当你在iframe页面关闭自身时
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭   
+
+                    }
+                })
+                return false;
+            });
+
+            //表单赋值
+            layui.$('#LAY-component-form-setval').on('click', function () {
+                form.val('example', {
+                    "username": "贤心" // "name": "value"
+                    , "password": "123456"
+                    , "interest": 1
+                    , "like[write]": true //复选框选中状态
+                    , "close": true //开关状态
+                    , "sex": "女"
+                    , "desc": "我爱 layui"
+                });
+            });
+
+
+        });
+    </script>
+</body>
+</html>
